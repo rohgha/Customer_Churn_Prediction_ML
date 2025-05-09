@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% block title %} Prediction History {% endblock title %}
+
+{% block body %}
+<!-- Page Background Style -->
+<style>
+  body {
+    background-color: rgb(212, 115, 58) !important; /* Match your theme if base.html has a different one */
+    color: #333; /* Adding a default text color for better readability */
+  }
+
+  .historyContainer {
+    margin-top: 20px; /* Added some top margin */
+    margin-bottom: 40px;
+    background-color: #fdfdfd; /* Light background for the container itself */
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    overflow-x: auto; /* Allows horizontal scrolling for the table on small screens */
+  }
+
+  .historyContainer h2 {
+    color: #333; /* Darker color for heading */
+    margin-bottom: 20px;
+  }
+
+  .historyTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+
+  .historyTable th, .historyTable td {
+    padding: 12px 15px; /* Increased padding */
+    text-align: left;   /* Left align text for better readability */
+    border: 1px solid #ddd;
+  }
+
+  .historyTable th {
+    background-color: #e9ecef; /* Lighter header background */
+    color: #495057;
+    font-weight: bold;
+  }
+  .historyTable tr:nth-child(even) {
+    background-color: #f8f9fa; /* Zebra striping for rows */
+  }
+
+  .historyTable td:last-child, .historyTable th:last-child,
+  .historyTable td:nth-last-child(2), .historyTable th:nth-last-child(2) {
+      text-align: center; /* Center align prediction and time */
+  }
+
+
+  .btn-animate {
+    background-color: #000 !important;
+    color: #fff !important;
+    border: none;
+    padding: 12px 40px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+    text-decoration: none; /* Remove underline from link */
+    display: inline-block; /* Proper button behavior */
+  }
+
+  .btn-animate:hover {
+    background-color: #222 !important;
+    transform: scale(1.05);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+    color: #fff !important; /* Ensure text color remains on hover */
+  }
+</style>
+
+<div class="container mt-4"> <!-- Wrapped in a Bootstrap container for better spacing if you use Bootstrap -->
+    <div class="historyContainer">
+      <h2 class="text-center">Prediction History</h2>
+
+      {% if logs %}
+      <table class="historyTable table table-striped table-hover"> <!-- Added some Bootstrap classes for potential styling -->
+        <thead>
+          <tr>
+            <th>Customer ID</th>
+            <th>Gender</th>
+            <th>Senior Citizen</th>
+            <th>Partner</th>
+            <th>Dependents</th>
+            <th>Tenure (Months)</th>
+            <th>Phone Service</th>
+            <th>Multiple Lines</th>
+            <th>Internet Service</th>
+            <th>Online Security</th>
+            <th>Online Backup</th>
+            <th>Device Protection</th>
+            <th>Tech Support</th>
+            <th>Streaming TV</th>
+            <th>Streaming Movies</th>
+            <th>Contract</th>
+            <th>Paperless Billing</th>
+            <th>Payment Method</th>
+            <th>Monthly Charges ($)</th>
+            <th>Total Charges ($)</th>
+            <th>Prediction</th>
+            <th>Prediction Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for record in logs %}
+            <tr>
+              <td>{{ record.customerID }}</td>
+              <td>{{ record.gender }}</td>
+              <td>{{ "Yes" if record.SeniorCitizen == 1 else "No" }}</td>
+              <td>{{ record.Partner }}</td>
+              <td>{{ record.Dependents }}</td>
+              <td>{{ record.tenure }}</td>
+              <td>{{ record.PhoneService }}</td>
+              <td>{{ record.MultipleLines }}</td>
+              <td>{{ record.InternetService }}</td>
+              <td>{{ record.OnlineSecurity }}</td>
+              <td>{{ record.OnlineBackup }}</td>
+              <td>{{ record.DeviceProtection }}</td>
+              <td>{{ record.TechSupport }}</td>
+              <td>{{ record.StreamingTV }}</td>
+              <td>{{ record.StreamingMovies }}</td>
+              <td>{{ record.Contract }}</td>
+              <td>{{ record.PaperlessBilling }}</td>
+              <td>{{ record.PaymentMethod }}</td>
+              <td>{{ "%.2f"|format(record.MonthlyCharges|float) }}</td>
+              <td>{{ "%.2f"|format(record.TotalCharges|float) }}</td>
+              <td>{{ "Churn" if record.prediction == 1 else "Not Churn" }}</td>
+              <td>{{ record.prediction_time }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+        <p class="text-center">No prediction history available.</p>
+      {% endif %}
+
+      <!-- Go back button -->
+      <div class="text-center mt-4">
+        <a href="/" class="btn btn-animate">Back to Home</a>
+      </div>
+    </div>
+</div>
+
+{% endblock body %}
