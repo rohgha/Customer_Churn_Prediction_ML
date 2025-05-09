@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+{% block title %}  Churn Prediction  {% endblock title %}
+{% block body %}
+
+<!-- Page Background Style -->
+<style>
+  body {
+    background-color:rgb(212, 115, 58) !important; /* Soft sky blue */
+  }
+
+  .btn-animate {
+    background-color: #000 !important;
+    color: #fff !important;
+    border: none;
+    padding: 12px 40px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+  }
+
+  .btn-animate:hover {
+    background-color: #222 !important;
+    transform: scale(1.05);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .formContainer {
+    margin-bottom: 40px;
+    background-color:rgb(212, 115, 58); /* white background inside form for readability */
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  }
+</style>
+
+<div class="formContainer">
+    <form action="/" method="POST">
+        <!-- 🟦 Customer ID + Autofill -->
+        <div class="form-row">
+            <div class="form-group col-md-3 mx-3">
+                <label for="customer_id_for_save">Enter Customer ID</label>
+                <input type="text" class="form-control" id="customerId" name="customer_id_for_save">
+                <input type="hidden" id="query0" name="query0">
+            </div>
+            <div class="form-group col-md-2 mx-3" style="margin-top: 32px;">
+                <button type="button" class="btn btn-info" onclick="autofillForm()">Autofill</button>
+            </div>
+        </div>
+
+        <!-- Input Fields -->
+        <div class="form-row">
+            <div class="form-group col-md-2 mx-3">
+                <label for="query1">Senior Citizen</label>
+                <select class="custom-select" id="query1" name="query1">
+                    <option value="0" selected>No</option>
+                    <option value="1">Yes</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2 mx-3">
+                <label for="query18">Payment Method</label>
+                <select class="custom-select" id="query18" name="query18">
+                    <option value="Mailed check">Mailed check</option>
+                    <option value="Electronic check">Electronic check</option>
+                    <option value="Bank transfer (automatic)">Bank transfer (automatic)</option>
+                    <option value="Credit card (automatic)">Credit card (automatic)</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2 mx-3">
+                <label for="query17">Paperless Billing</label>
+                <select class="custom-select" id="query17" name="query17">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2 mx-3">
+                <label for="query4">Gender</label>
+                <select class="custom-select" id="query4" name="query4">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- More Fields -->
+        <div class="form-row">
+            <div class="form-group col-md-2 mx-3">
+                <label for="query5">Partner</label>
+                <select class="custom-select" id="query5" name="query5">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2 mx-3">
+                <label for="query6">Dependents</label>
+                <select class="custom-select" id="query6" name="query6">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2 mx-3">
+                <label for="query7">Phone Service</label>
+                <select class="custom-select" id="query7" name="query7">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2 mx-3">
+                <label for="query8">Multiple Lines</label>
+                <select class="custom-select" id="query8" name="query8">
+                    <option value="Yes">Yes</option>
+                    <option value="No phone service">No Phone Service</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-2 mx-3">
+                <label for="query9">Internet Service</label>
+                <select class="custom-select" id="query9" name="query9">
+                    <option value="DSL">DSL</option>
+                    <option value="Fiber optic">Fiber optic</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2 mx-3">
+                <label for="query10">Online Security</label>
+                <select class="custom-select" id="query10" name="query10">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2 mx-3">
+                <label for="query11">Online Backup</label>
+                <select class="custom-select" id="query11" name="query11">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2 mx-3">
+                <label for="query12">Device Protection</label>
+                <select class="custom-select" id="query12" name="query12">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-2 mx-3">
+                <label for="query13">Tech Support</label>
+                <select class="custom-select" id="query13" name="query13">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2 mx-3">
+                <label for="query14">Streaming TV</label>
+                <select class="custom-select" id="query14" name="query14">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2 mx-3">
+                <label for="query15">Streaming Movies</label>
+                <select class="custom-select" id="query15" name="query15">
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                </select>
+            </div>
+            <div class="form-group col-md-2 mx-3">
+                <label for="query16">Contract</label>
+                <select class="custom-select" id="query16" name="query16">
+                    <option value="One year">One year</option>
+                    <option value="Month-to-month">Month-to-month</option>
+                    <option value="Two year">Two year</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-2 mx-3">
+                <label for="query2">Monthly Charges</label>
+                <input type="number" id="query2" name="query2" min="1" step="0.01" value="100">
+            </div>
+            <div class="form-group col-md-2 mx-3">
+                <label for="query3">Total Charges</label>
+                <input type="number" id="query3" name="query3" min="1" step="0.01" value="100">
+            </div>
+            <div class="form-group col-md-2 mx-3">
+                <label for="query19">Tenure</label>
+                <input type="number" id="query19" name="query19" min="1" value="1">
+            </div>
+        </div>
+
+        <!-- Predict Button -->
+        <div class="form-row mt-4 mb-3">
+            <div class="form-group col-md-12 text-center">
+                <button type="submit" class="btn btn-animate" name="submit" id="submitbtn" value="predict">
+                    PREDICT
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- Output -->
+    <div class="bottomContainer my-2">
+        <div class="outputWindow">
+            {% if output1 == "This customer is likely to be churned!!" %}
+                <div class="alert alert-danger">{{output1}} {{output2}}</div>
+            {% elif output1 %}
+                <div class="alert alert-success">{{output1}} {{output2}}</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Autofill Script -->
+<script>
+function autofillForm() {
+    var customerId = document.getElementById('customerId').value;
+    fetch('/get_customer_data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ customer_id: customerId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "ok") {
+            Object.keys(data.customer).forEach(function(key) {
+                const el = document.getElementById("query" + key);
+                if (el) el.value = data.customer[key];
+            });
+            document.getElementById("query0").value = customerId;
+        } else {
+            alert("Customer not found");
+        }
+    });
+}
+</script>
+
+{% endblock body %}
+
